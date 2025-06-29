@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html data-wf-domain="wealth-bento-webflow-template.webflow.io" data-wf-page="66e3df8d47eb3991ca9dbefe"
-    data-wf-site="66e3df8d47eb3991ca9dbef7" lang="en">
+<html  data-wf-page="66e3df8d47eb3991ca9dbefe"
+     lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -155,6 +155,111 @@
             <div class="space-7rem"></div>
         </div>
     </section>
+
+    <!-- EMAIL SIGNUP SECTION AFTER HERO -->
+    <section class="section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
+        <div class="w-layout-blockcontainer container padding-4-5rem w-container">
+            <div class="space-4rem"></div>
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <div class="subheading-flex" style="justify-content: center; margin-bottom: 1.5rem;">
+                    <div class="icon-wrapper background-primary">
+                        <img width="Auto" height="Auto" alt="" src="{{ url_for('static', filename='images/66e517d167d5eeb317efa720_add.svg') }}" loading="eager" class="small-icon">
+                    </div>
+                    <h5>Early Access</h5>
+                </div>
+                <h2 style="font-size: 3.5rem; font-weight: 700; color: #18191c; margin-bottom: 1.5rem; line-height: 1.1;">
+                    Be Among the First to Experience <span class="italics" style="color: #eaff61;">NOA's Power</span>
+                </h2>
+                <p style="font-size: 1.25rem; color: #6c757d; margin-bottom: 2.5rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Join our exclusive waitlist and get early access to NOA's revolutionary AI-powered social media automation. Plus, get special founding member benefits and priority support.
+                </p>
+                
+                <div class="sign-up-form w-form" style="max-width: 500px; margin: 0 auto;">
+                    <form id="wf-form-Subscribe-To-Newsletter-2" name="wf-form-Subscribe-To-Newsletter-2" method="post" action="{{ url_for('api_subscribe') }}" class="sign-up-form-container" style="background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+                        <input class="sign-up-text-field w-input" maxlength="256" name="Newsletter-Email-2" placeholder="Enter your email address" type="email" id="Newsletter-Email-2-Hero" required="" style="color: #333; background: transparent; border: none; font-size: 1.1rem;">
+                        <input type="submit" data-wait="Please wait..." class="button-subscribe w-button" value="Join Waitlist →" style="background: #eaff61; color: #18191c; font-weight: 600; border-radius: 8px; transition: all 0.3s ease;">
+                    </form>
+                    <div class="success-message-sign-up-form w-form-done" style="margin-top: 1rem;">
+                        <div style="color: #28a745; font-weight: 500;">🎉 Welcome to the NOA family! We'll be in touch soon.</div>
+                    </div>
+                    <div class="error-message w-form-fail" style="margin-top: 1rem;">
+                        <div class="red-font">Oops! Something went wrong. Please try again.</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d; font-size: 0.9rem;">
+                        <span style="color: #28a745;">✓</span>
+                        <span>Free Early Access</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d; font-size: 0.9rem;">
+                        <span style="color: #28a745;">✓</span>
+                        <span>Founding Member Benefits</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d; font-size: 0.9rem;">
+                        <span style="color: #28a745;">✓</span>
+                        <span>Priority Support</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-4rem"></div>
+        </div>
+    </section>
+
+    <!-- WHY NOA SECTION (MARQUEE STYLE WITH EDGE BLUR) -->
+    <section class="why-noa-editorial-section" style="background: #e7e7e9; padding: 70px 0 60px 0; position: relative;">
+        <div class="container" style="max-width: 1100px;  display: flex; align-items: flex-start; gap: 48px; flex-wrap: wrap;">
+          <div style="flex: 1 1 ; min-width: 320px; max-width: 420px;">
+            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+              <span style="background: #eaff61; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ url_for('static', filename='images/66e973921c46c8c0a5af604b_svg_iWgg.svg') }}" alt="Articles Icon" style="width: 22px; height: 22px;">
+              </span>
+              <span style="color: #23242a; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.08em;">ARTICLES</span>
+            </div>
+            <h2 style="font-size: 3.2rem; font-weight: 900; color: #18191c; margin-bottom: 0.5rem; letter-spacing: -2px; line-height: 1.05;">Why NOA?</h2>
+          </div>
+          <div style="flex: 2 1; min-width: 320px; display: flex; align-items: center;">
+            <span style="color: #23242a; font-size: 1.15rem; font-weight: 400; letter-spacing: 0.13em;">We built NOA because creators and social managers deserve tools that are as creative, fast, and human as they are. Here's what makes us different.</span>
+          </div>
+        </div>
+        <div class="why-noa-marquee-outer" style="overflow: hidden; margin-top: 48px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative;">
+          <!-- Left Blur Overlay -->
+          <div class="why-noa-marquee-blur left"></div>
+          <!-- Right Blur Overlay -->
+          <div class="why-noa-marquee-blur right"></div>
+          <div class="why-noa-marquee-track">
+            {% for i in range(2) %} <!-- Duplicate for seamless loop -->
+              <div class="why-noa-cards-row-marquee">
+                <div class="why-noa-card first-card-marquee">
+                  <span class="why-noa-tag">CREATOR-FIRST</span>
+                  <h3>Built for Creators</h3>
+                  <p>NOA is designed with real creators in mind—no more generic, corporate tools.</p>
+                </div>
+                <div class="why-noa-card">
+                  <span class="why-noa-tag">HUMAN-LIKE AI</span>
+                  <h3>AI That Feels Human</h3>
+                  <p>Our AI writes, schedules, and engages like a real person—so your brand always feels authentic.</p>
+                </div>
+                <div class="why-noa-card">
+                  <span class="why-noa-tag">NO BURNOUT</span>
+                  <h3>No More Burnout</h3>
+                  <p>Automate the busywork and focus on what matters—NOA handles the rest, 24/7.</p>
+                </div>
+                <div class="why-noa-card">
+                  <span class="why-noa-tag">ALL-IN-ONE</span>
+                  <h3>All-in-One Platform</h3>
+                  <p>From ideation to engagement, manage everything in one place—no more tool overload.</p>
+                </div>
+                <div class="why-noa-card last-card-marquee">
+                  <span class="why-noa-tag">GROWS WITH YOU</span>
+                  <h3>Grows With You</h3>
+                  <p>NOA adapts to your workflow, whether you're a solo creator or a growing team.</p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
    
   
     <section class="section">
@@ -299,69 +404,225 @@
             const successMessage = document.querySelector('.success-message-sign-up-form');
             const errorMessage = document.querySelector('.error-message');
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('Newsletter-Email-2').value;
-                const submitButton = form.querySelector('input[type="submit"]');
-                const originalValue = submitButton.value;
-                
-                // Show loading state
-                submitButton.value = 'Please wait...';
-                submitButton.disabled = true;
-                
-                // Hide any existing messages
-                successMessage.style.display = 'none';
-                errorMessage.style.display = 'none';
-                
-                // Send AJAX request
-                fetch('{{ url_for("api_subscribe") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'Newsletter-Email-2=' + encodeURIComponent(email)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Show success message
-                        successMessage.style.display = 'block';
-                        form.reset();
-                        
-                        // Auto-hide success message after 5 seconds
-                        setTimeout(() => {
-                            successMessage.style.display = 'none';
-                        }, 5000);
-                    } else {
-                        // Show error message
-                        errorMessage.querySelector('div').textContent = data.message || 'Something went wrong. Please try again.';
-                        errorMessage.style.display = 'block';
-                        
-                        // Auto-hide error message after 5 seconds
-                        setTimeout(() => {
-                            errorMessage.style.display = 'none';
-                        }, 5000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    errorMessage.querySelector('div').textContent = 'Network error. Please try again.';
-                    errorMessage.style.display = 'block';
+            // Handle the new hero email form
+            const heroForm = document.getElementById('wf-form-Subscribe-To-Newsletter-2');
+            const heroSuccessMessage = heroForm ? heroForm.parentElement.querySelector('.success-message-sign-up-form') : null;
+            const heroErrorMessage = heroForm ? heroForm.parentElement.querySelector('.error-message') : null;
+            
+            // Function to handle form submission
+            function handleFormSubmission(form, successMsg, errorMsg) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     
-                    // Auto-hide error message after 5 seconds
-                    setTimeout(() => {
-                        errorMessage.style.display = 'none';
-                    }, 5000);
-                })
-                .finally(() => {
-                    // Reset button state
-                    submitButton.value = originalValue;
-                    submitButton.disabled = false;
+                    const email = form.querySelector('input[type="email"]').value;
+                    const submitButton = form.querySelector('input[type="submit"]');
+                    const originalValue = submitButton.value;
+                    
+                    // Show loading state
+                    submitButton.value = 'Please wait...';
+                    submitButton.disabled = true;
+                    
+                    // Hide any existing messages
+                    if (successMsg) successMsg.style.display = 'none';
+                    if (errorMsg) errorMsg.style.display = 'none';
+                    
+                    // Send AJAX request
+                    fetch('{{ url_for("api_subscribe") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'Newsletter-Email-2=' + encodeURIComponent(email)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            if (successMsg) {
+                                successMsg.style.display = 'block';
+                                form.reset();
+                                
+                                // Auto-hide success message after 5 seconds
+                                setTimeout(() => {
+                                    successMsg.style.display = 'none';
+                                }, 5000);
+                            }
+                        } else {
+                            // Show error message
+                            if (errorMsg) {
+                                errorMsg.querySelector('div').textContent = data.message || 'Something went wrong. Please try again.';
+                                errorMsg.style.display = 'block';
+                                
+                                // Auto-hide error message after 5 seconds
+                                setTimeout(() => {
+                                    errorMsg.style.display = 'none';
+                                }, 5000);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (errorMsg) {
+                            errorMsg.querySelector('div').textContent = 'Network error. Please try again.';
+                            errorMsg.style.display = 'block';
+                            
+                            // Auto-hide error message after 5 seconds
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 5000);
+                        }
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        submitButton.value = originalValue;
+                        submitButton.disabled = false;
+                    });
                 });
-            });
+            }
+            
+            // Handle both forms
+            if (form) handleFormSubmission(form, successMessage, errorMessage);
+            if (heroForm) handleFormSubmission(heroForm, heroSuccessMessage, heroErrorMessage);
         });
     </script>
+
+    
+    <style>
+      .why-noa-marquee-outer {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background: none;
+      }
+      .why-noa-marquee-blur {
+        position: absolute;
+        top: 0;
+        width: 60px;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+      }
+      .why-noa-marquee-blur.left {
+        left: 0;
+        background: linear-gradient(to right, #e7e7e9 80%, rgba(244,245,247,0));
+      }
+      .why-noa-marquee-blur.right {
+        right: 0;
+        background: linear-gradient(to left, #e7e7e9 80%, rgba(244,245,247,0));
+      }
+      .why-noa-marquee-track {
+        display: flex;
+        width: max-content;
+        animation: whyNoaMarquee 32s linear infinite;
+      }
+      .why-noa-marquee-track:hover {
+        animation-play-state: paused;
+      }
+      .why-noa-cards-row-marquee {
+        display: flex;
+        gap: 32px;
+      }
+      .why-noa-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 2px 16px 0 rgba(30,41,59,0.07);
+        padding: 38px 32px 32px 32px;
+        min-width: 260px;
+        max-width: 340px;
+        margin-bottom: 0;
+        border: 1.5px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+      .why-noa-card:hover {
+        box-shadow: 0 8px 40px 0 rgba(234,255,97,0.18);
+        transform: translateY(-6px) scale(1.035);
+        z-index: 2;
+      }
+      .why-noa-tag {
+        background: #eaff61;
+        color: #101114;
+        font-size: 0.95rem;
+        font-weight: 700;
+        border-radius: 18px;
+        padding: 3px 14px;
+        align-self: flex-start;
+        margin-bottom: 18px;
+      }
+      .why-noa-card h3 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #18191c;
+        margin-bottom: 10px;
+      }
+      .why-noa-card p {
+        font-size: 1.05rem;
+        color: #3b4252;
+        margin-bottom: 0;
+      }
+      @keyframes whyNoaMarquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      @media (max-width: 1100px) {
+        .why-noa-cards-row-marquee {
+          gap: 18px;
+        }
+        .why-noa-card {
+          min-width: 220px;
+        }
+        .why-noa-editorial-section .container {
+          flex-direction: column;
+          gap: 18px;
+        }
+        .why-noa-marquee-blur {
+          width: 36px;
+        }
+      }
+      @media (max-width: 700px) {
+        .why-noa-cards-row-marquee {
+          gap: 12px;
+        }
+        .why-noa-card {
+          min-width: 180px;
+          padding: 24px 12px;
+        }
+        .why-noa-editorial-section .container {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .why-noa-marquee-blur {
+          width: 18px;
+        }
+      }
+      .first-card-marquee {
+        margin-left: 32px;
+      }
+      .last-card-marquee {
+        margin-right: 32px;
+      }
+      @media (max-width: 1100px) {
+        .first-card-marquee {
+          margin-left: 18px;
+        }
+        .last-card-marquee {
+          margin-right: 18px;
+        }
+      }
+      @media (max-width: 700px) {
+        .first-card-marquee {
+          margin-left: 8px;
+        }
+        .last-card-marquee {
+          margin-right: 8px;
+        }
+      }
+    </style>
+    <!-- END WHY NOA SECTION -->
+
+    
 </body>
 
 </html>

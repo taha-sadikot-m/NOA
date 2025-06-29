@@ -12,48 +12,63 @@ app.config['SECRET_KEY'] = Config.SECRET_KEY
 app.config['DATABASE'] = Config.DATABASE
 
 def init_db():
-    """Initialize database (SQLite fallback)"""
-    if Config.USE_SUPABASE:
-        try:
-            supabase_service = get_supabase_service()
-            supabase_service.create_tables()
-            print("Supabase tables initialized")
-            return
-        except Exception as e:
-            print(f"Supabase initialization failed: {e}")
-            print("Falling back to SQLite...")
-    
-    # SQLite fallback
-    conn = sqlite3.connect(app.config['DATABASE'])
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS subscriptions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS contact_messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            message TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    
-    conn.commit()
-    conn.close()
-    print("SQLite database initialized")
+    """Initialize database (SQLite fallback) - Made optional for Vercel"""
+    try:
+        if Config.USE_SUPABASE:
+            try:
+                supabase_service = get_supabase_service()
+                supabase_service.create_tables()
+                print("Supabase tables initialized")
+                return
+            except Exception as e:
+                print(f"Supabase initialization failed: {e}")
+                print("Falling back to SQLite...")
+        
+        # SQLite fallback - only if we can write to filesystem
+        if os.environ.get('VERCEL') is None:  # Only initialize SQLite locally
+            conn = sqlite3.connect(app.config['DATABASE'])
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS subscriptions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT UNIQUE NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS contact_messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            conn.commit()
+            conn.close()
+            print("SQLite database initialized")
+        else:
+            print("Running on Vercel - skipping SQLite initialization")
+            
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+        print("Continuing without database initialization")
 
 def get_db_connection():
-    """Get database connection (SQLite fallback)"""
-    conn = sqlite3.connect(app.config['DATABASE'])
-    conn.row_factory = sqlite3.Row
-    return conn
+    """Get database connection (SQLite fallback) - Made safe for Vercel"""
+    try:
+        if os.environ.get('VERCEL') is not None:
+            # On Vercel, we should use Supabase
+            return None
+        conn = sqlite3.connect(app.config['DATABASE'])
+        conn.row_factory = sqlite3.Row
+        return conn
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        return None
 
 @app.route('/')
 def index():
@@ -114,22 +129,30 @@ def api_subscribe():
                 print(f"Supabase error: {e}")
                 # Fall back to SQLite
         
-        # SQLite fallback
+        # SQLite fallback - only if not on Vercel
         conn = get_db_connection()
-        existing = conn.execute('SELECT id FROM subscriptions WHERE email = ?', (email,)).fetchone()
+        if conn is None:
+            return jsonify({'success': False, 'message': 'Database not available. Please configure Supabase.'}), 500
         
-        if existing:
+        try:
+            existing = conn.execute('SELECT id FROM subscriptions WHERE email = ?', (email,)).fetchone()
+            
+            if existing:
+                conn.close()
+                return jsonify({'success': False, 'message': 'Email already subscribed'}), 400
+            
+            conn.execute('INSERT INTO subscriptions (email) VALUES (?)', (email,))
+            conn.commit()
             conn.close()
-            return jsonify({'success': False, 'message': 'Email already subscribed'}), 400
-        
-        conn.execute('INSERT INTO subscriptions (email) VALUES (?)', (email,))
-        conn.commit()
-        conn.close()
-        
-        return jsonify({
-            'success': True, 
-            'message': 'Thank you! Your submission has been received!'
-        })
+            
+            return jsonify({
+                'success': True, 
+                'message': 'Thank you! Your submission has been received!'
+            })
+        except Exception as e:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Database error occurred'}), 500
+            
     except Exception as e:
         return jsonify({'success': False, 'message': 'Something went wrong'}), 500
 
@@ -154,19 +177,27 @@ def contact_form():
                 print(f"Supabase error: {e}")
                 # Fall back to SQLite
         
-        # SQLite fallback
+        # SQLite fallback - only if not on Vercel
         conn = get_db_connection()
-        conn.execute('''
-            INSERT INTO contact_messages (name, email, message)
-            VALUES (?, ?, ?)
-        ''', (name, email, message))
-        conn.commit()
-        conn.close()
+        if conn is None:
+            return jsonify({'success': False, 'message': 'Database not available. Please configure Supabase.'}), 500
         
-        return jsonify({
-            'success': True, 
-            'message': 'Thank you for your message! We\'ll get back to you soon.'
-        })
+        try:
+            conn.execute('''
+                INSERT INTO contact_messages (name, email, message)
+                VALUES (?, ?, ?)
+            ''', (name, email, message))
+            conn.commit()
+            conn.close()
+            
+            return jsonify({
+                'success': True, 
+                'message': 'Thank you for your message! We\'ll get back to you soon.'
+            })
+        except Exception as e:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Database error occurred'}), 500
+            
     except Exception as e:
         return jsonify({'success': False, 'message': 'Something went wrong'}), 500
 
@@ -182,11 +213,18 @@ def admin_subscriptions():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     
-    # SQLite fallback
+    # SQLite fallback - only if not on Vercel
     conn = get_db_connection()
-    subscriptions = conn.execute('SELECT * FROM subscriptions ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return jsonify([dict(sub) for sub in subscriptions])
+    if conn is None:
+        return jsonify({'error': 'Database not available. Please configure Supabase.'}), 500
+    
+    try:
+        subscriptions = conn.execute('SELECT * FROM subscriptions ORDER BY created_at DESC').fetchall()
+        conn.close()
+        return jsonify([dict(sub) for sub in subscriptions])
+    except Exception as e:
+        conn.close()
+        return jsonify({'error': 'Database error occurred'}), 500
 
 @app.route('/admin/contacts')
 def admin_contacts():
@@ -199,11 +237,28 @@ def admin_contacts():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     
-    # SQLite fallback
+    # SQLite fallback - only if not on Vercel
     conn = get_db_connection()
-    messages = conn.execute('SELECT * FROM contact_messages ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return jsonify([dict(msg) for msg in messages])
+    if conn is None:
+        return jsonify({'error': 'Database not available. Please configure Supabase.'}), 500
+    
+    try:
+        messages = conn.execute('SELECT * FROM contact_messages ORDER BY created_at DESC').fetchall()
+        conn.close()
+        return jsonify([dict(msg) for msg in messages])
+    except Exception as e:
+        conn.close()
+        return jsonify({'error': 'Database error occurred'}), 500
+
+@app.route('/test')
+def test():
+    """Test endpoint to verify the app is working"""
+    return jsonify({
+        'status': 'success',
+        'message': 'Noa app is running!',
+        'environment': os.environ.get('VERCEL', 'local'),
+        'supabase_configured': Config.USE_SUPABASE
+    })
 
 @app.errorhandler(404)
 def not_found(error):
@@ -214,9 +269,13 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 # Initialize database
-with app.app_context():
-    init_db()
+try:
+    with app.app_context():
+        init_db()
+except Exception as e:
+    print(f"Database initialization failed: {e}")
+    print("App will continue without database initialization")
 
-# For Vercel deployment - remove the main block
-# if __name__ == '__main__':
-#     app.run(debug=True, host='0.0.0.0', port=5000) 
+#For Vercel deployment - remove the main block
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000) 
