@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noa Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #222;
+            color: white;
+            border-radius: 8px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .email {
+            font-family: monospace;
+            color: #007bff;
+        }
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Noa Admin Dashboard</h1>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="subscription-count">-</div>
+                <div>Email Subscriptions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="contact-count">-</div>
+                <div>Contact Messages</div>
+            </div>
+        </div>
+        
+        <button class="refresh-btn" onclick="loadData()">Refresh Data</button>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('subscriptions')">Email Subscriptions</button>
+            <button class="tab" onclick="showTab('contacts')">Contact Messages</button>
+        </div>
+        
+        <div id="subscriptions-tab" class="tab-content active">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Date Subscribed</th>
+                    </tr>
+                </thead>
+                <tbody id="subscriptions-body">
+                    <tr><td colspan="3">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="contacts-tab" class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="contacts-body">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function loadData() {
+            fetch('/admin/subscriptions')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('subscriptions-body');
+                    document.getElementById('subscription-count').textContent = data.length;
+                    
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3">No subscriptions yet</td></tr>';
+                        return;
+                    }
+                    
+                    tbody.innerHTML = data.map(sub => `
+                        <tr>
+                            <td>${sub.id}</td>
+                            <td class="email">${sub.email}</td>
+                            <td class="date">${new Date(sub.created_at).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('subscriptions-body').innerHTML = 
+                        '<tr><td colspan="3">Error loading data</td></tr>';
+                });
+            
+            fetch('/admin/contacts')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('contacts-body');
+                    document.getElementById('contact-count').textContent = data.length;
+                    
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5">No contact messages yet</td></tr>';
+                        return;
+                    }
+                    
+                    tbody.innerHTML = data.map(contact => `
+                        <tr>
+                            <td>${contact.id}</td>
+                            <td>${contact.name}</td>
+                            <td class="email">${contact.email}</td>
+                            <td>${contact.message.substring(0, 50)}${contact.message.length > 50 ? '...' : ''}</td>
+                            <td class="date">${new Date(contact.created_at).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('contacts-body').innerHTML = 
+                        '<tr><td colspan="5">Error loading data</td></tr>';
+                });
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadData);
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
