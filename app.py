@@ -73,7 +73,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     """Main landing page"""
-    return render_template('index.html')
+    return render_template('NOA-version1.html')
 
 @app.route('/features')
 def features():

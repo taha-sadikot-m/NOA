@@ -3652,7 +3652,7 @@ blockquote {
   z-index: 1;
   border-radius: var(--border-radius);
   text-align: center;
-  background-image: url("../images/66e52526c6abb1203e209925_img_CTJ4.webp");
+  background-color: #f5f5f5;
   background-position: 50% 0;
   background-repeat: no-repeat;
   background-size: cover;
